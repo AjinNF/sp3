@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pesbuk-data
+  namespace: pesbuk
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: pesbuk-storage
+  resources:
+    requests:
+      storage: 5Gi

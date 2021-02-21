@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pesbuk
+  namespace: pesbuk
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pesbuk
+  template:
+    metadata:
+      labels:
+        app: pesbuk
+    spec:
+      containers:
+      - name: pesbuk
+        image: ajinnf/pesbuk1:secret
+        env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: secretpesbuk
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: secretpesbuk
+                  key: DB_PASS
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: secretpesbuk
+                  key: DB_HOST
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: secretpesbuk
+                  key: DB_NAME
+        ports:
+        - containerPort: 80        
+        volumeMounts:
+        - mountPath: /data
+          name: data
+        securityContext:
+          readOnlyRootFilesystem: true
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: pesbuk-data
+              
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pesbuk
+  namespace: pesbuk
+spec:
+  #type: LoadBalancer
+  ports:
+    - port: 80
+      #nodePort: 30080
+  selector:
+    app: pesbuk
+
