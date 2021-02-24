@@ -16,4 +16,4 @@ spec:
       #- path: /belajar
       - backend:
           serviceName: wordpress
-          servicePort: 82
+          servicePort: 80
